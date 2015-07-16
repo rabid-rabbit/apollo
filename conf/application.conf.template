@@ -1,0 +1,48 @@
+rdbms {
+
+ current = "local"
+
+ local {
+  connection-string="jdbc:mysql://localhost:3306?user=root&password=root"
+ }
+
+}
+
+spark {
+
+ default.parallelism = 200
+
+ master = "spark://LM-VORLOV.local:7077"
+
+}
+
+cassandra {
+
+ connection-host = "localhost"
+
+ spark-cleaner-ttl = 3600
+
+}
+
+price-engine {
+
+ response-max-latency = "30 seconds"
+
+}
+
+akka {
+
+ actor {
+  provider = "akka.remote.RemoteActorRefProvider"
+ }
+
+ remote {
+  enabled-transports = ["akka.remote.netty.tcp"]
+  netty.tcp {
+   hostname = "127.0.0.1"
+   port = 2552
+  }
+  log-sent-messages = on
+  log-received-messages = on
+ }
+}

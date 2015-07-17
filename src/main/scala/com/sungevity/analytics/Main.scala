@@ -4,7 +4,8 @@ import java.io.File
 
 import akka.actor.{ActorSystem, Props}
 import akka.io.IO
-import com.sungevity.analytics.server.{Configuration, Router}
+import com.sungevity.analytics.server.Router
+import com.sungevity.analytics.server.protocol.{ApplicationLifecycle, Configuration}
 import com.sungevity.analytics.utils.IOUtils
 import com.typesafe.config.ConfigFactory
 import spray.can.Http
@@ -31,8 +32,6 @@ object Main extends App {
   implicit val system = ActorSystem("Apollo", config)
 
   val handler = system.actorOf(Props(new Router(config)), name = "router")
-
-  val configuration = system.actorOf(Props(new Configuration(config)), name = "configuration")
 
   IO(Http) ! Http.Bind(handler, interface = "localhost", port = 9000)
 

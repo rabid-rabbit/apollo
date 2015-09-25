@@ -5,7 +5,6 @@ import java.io.File
 import akka.actor.{ActorSystem, Props}
 import akka.io.IO
 import com.sungevity.analytics.server.Router
-import com.sungevity.analytics.server.protocol.{ApplicationLifecycle, Configuration}
 import com.sungevity.analytics.utils.IOUtils
 import com.typesafe.config.ConfigFactory
 import spray.can.Http

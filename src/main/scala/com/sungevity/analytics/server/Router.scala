@@ -3,7 +3,6 @@ package com.sungevity.analytics.server
 import akka.actor._
 import akka.pattern.ask
 import akka.util.Timeout
-import com.sungevity.analytics.protocol.{ApplicationRegistryEntry, GetApplicationRegistryEntry}
 import com.sungevity.analytics.server.protocol._
 import com.typesafe.config.Config
 import spray.can.Http
@@ -20,8 +19,6 @@ class Router(config: Config) extends Actor with ActorLogging {
 
   val configuration = context.actorOf(Props(new Configuration(config)), name = "configuration")
 
-  val lifecycle = context.actorOf(Props[ApplicationLifecycle], name = "lifecycle")
-
   override def receive = {
 
     case _: Http.Connected => {
@@ -36,20 +33,6 @@ class Router(config: Config) extends Actor with ActorLogging {
       context.actorSelection("/user/IO-HTTP/listener-0") ? Http.GetStats onSuccess {
         case x: Stats => client ! statsPresentation(x)
       }
-
-    case HttpRequest(GET, Uri.Path(path), _, _, _) => {
-
-      implicit val timeout: Timeout = 1 day
-
-      lifecycle ? GetApplicationRegistryEntry(path.drop(1)) onSuccess {
-        case entry: ApplicationRegistryEntry => {
-          val client = sender
-          val worker = context.actorSelection(entry.address)
-          context actorOf Props(new DataStream(client, worker))
-        }
-      }
-
-    }
 
     case HttpRequest(GET, _, _, _, _) =>
       sender ! index

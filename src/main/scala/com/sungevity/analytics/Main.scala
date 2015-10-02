@@ -2,9 +2,12 @@ package com.sungevity.analytics
 
 import java.io.File
 
-import akka.actor.{ActorSystem, Props}
+import akka.actor.{Props, ActorSystem}
 import akka.io.IO
-import com.sungevity.analytics.server.Router
+import akka.routing.FromConfig
+import com.sungevity.analytics.api.SparkApplicationContext
+import com.sungevity.analytics.services.Configuration
+import com.sungevity.analytics.services.http.Router
 import com.sungevity.analytics.utils.IOUtils
 import com.typesafe.config.ConfigFactory
 import spray.can.Http
@@ -28,11 +31,19 @@ object Main extends App {
 
   implicit val config = ConfigFactory.parseFile(new File(args(0)))
 
+  val sparkContext = new SparkApplicationContext(config) {
+    override def applicationName: String = "Apollo"
+  }
+
   implicit val system = ActorSystem("Apollo", config)
 
-  val handler = system.actorOf(Props(new Router(config)), name = "router")
+  val configuration = system.actorOf(Props(new Configuration(config)).withRouter(FromConfig()), name = "configuration")
 
-  IO(Http) ! Http.Bind(handler, interface = "localhost", port = 9000)
+  val scheduler = system.actorOf(Props(new services.Scheduler).withRouter(FromConfig()), name = "scheduler")
+
+  val httpServer = system.actorOf(Props(new Router(sparkContext)).withRouter(FromConfig()), "http-server")
+
+  IO(Http) ! Http.Bind(httpServer, interface = config.getString("spray.can.server.hostname"), port = config.getInt("spray.can.server.port"))
 
 
 }

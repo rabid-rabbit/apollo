@@ -1,5 +1,7 @@
 val sprayVersion = "1.3.+"
 
+val slf4jVersion = "1.7.12"
+
 lazy val server = (project in file(".")).enablePlugins(JavaServerAppPackaging).settings (
 
   name := "apollo",
@@ -10,7 +12,7 @@ lazy val server = (project in file(".")).enablePlugins(JavaServerAppPackaging).s
 
   scalaVersion := "2.11.6",
 
-  slf4jVersion := "1.7.12",
+  resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/",
 
   libraryDependencies ++= Seq(
     "com.typesafe" % "config" % "1.3.0",
@@ -18,8 +20,11 @@ lazy val server = (project in file(".")).enablePlugins(JavaServerAppPackaging).s
     "io.spray" %% "spray-can" % sprayVersion,
     "io.spray" %% "spray-client" % sprayVersion,
     "io.spray" %% "spray-json" % sprayVersion,
+    "io.spray" %% "spray-routing" % sprayVersion,
     "org.slf4j" % "slf4j-api" % slf4jVersion,
     "org.slf4j" % "slf4j-log4j12" % slf4jVersion,
+    "com.typesafe.akka" %% "akka-actor" % "2.3.14",
+    "com.enragedginger" %% "akka-quartz-scheduler" % "1.4.0-akka-2.3.x",
     "joda-time" % "joda-time" % "2.8.1",
     "com.github.nscala-time" %% "nscala-time" % "2.0.0",
     "org.apache.commons" % "commons-lang3" % "3.4",

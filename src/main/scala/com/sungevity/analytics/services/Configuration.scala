@@ -1,4 +1,4 @@
-package com.sungevity.analytics.server.protocol
+package com.sungevity.analytics.services
 
 import akka.actor.Actor
 import com.typesafe.config.Config

@@ -23,7 +23,7 @@ trait HDFSStaticFiles extends Directives with HDFSShare {
 
     new ToResponseMarshallable {
       override def marshal(ctx: ToResponseMarshallingContext): Unit = {
-        streamMarshaller(stream.toStream, ctx)
+        streamMarshaller(stream, ctx)
       }
     }
 
@@ -43,7 +43,7 @@ trait HDFSStaticFiles extends Directives with HDFSShare {
 
               respondWithHeader(`Content-Disposition`("attachment", Map("filename" -> FilenameUtils.getName(resource)))) {
 
-                complete(stream.toStream)
+                complete(stream.toStream.filter(!_.isEmpty).map(_ + "\n"))
 
               }
 

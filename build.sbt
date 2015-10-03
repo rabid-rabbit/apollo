@@ -23,7 +23,6 @@ lazy val server = (project in file(".")).enablePlugins(JavaServerAppPackaging).s
     "io.spray" %% "spray-routing" % sprayVersion,
     "org.slf4j" % "slf4j-api" % slf4jVersion,
     "org.slf4j" % "slf4j-log4j12" % slf4jVersion,
-    "com.typesafe.akka" %% "akka-actor" % "2.3.14",
     "com.enragedginger" %% "akka-quartz-scheduler" % "1.4.0-akka-2.3.x",
     "joda-time" % "joda-time" % "2.8.1",
     "com.github.nscala-time" %% "nscala-time" % "2.0.0",

@@ -31,7 +31,7 @@ object Main extends App {
 
   implicit val config = ConfigFactory.parseFile(new File(args(0)))
 
-  val sparkContext = new SparkApplicationContext(config) {
+  val sparkContext = new SparkApplicationContext(config, Set("spark.cores.max" -> "1")) {
     override def applicationName: String = "Apollo"
   }
 
